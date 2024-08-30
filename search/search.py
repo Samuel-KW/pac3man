@@ -72,19 +72,9 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
-def depthFirstSearch(problem):
+def depthFirstSearch(problem: SearchProblem):
     """
     Search the deepest nodes in the search tree first.
-
-    Your search algorithm needs to return a list of actions that reaches the
-    goal. Make sure to implement a graph search algorithm.
-
-    To get started, you might want to try some of these simple commands to
-    understand the search problem that is being passed in:
-
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     
     # Keep track of visited nodes
@@ -115,10 +105,41 @@ def depthFirstSearch(problem):
     # No solution found
     return []
 
-def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+def breadthFirstSearch(problem: SearchProblem):
+    """
+    Search the shallowest nodes in the search tree first.
+    """
+
+    # Keep track of visited nodes
+    visited = set()
+    
+    # Store states to explore
+    queue = util.Queue()
+    queue.push((problem.getStartState(), []))
+
+    while not queue.isEmpty():
+
+        # Get the next state and path
+        state, actions = queue.pop()
+
+        # Skip if state has been visited
+        if state in visited: continue  
+
+        # Mark the state as visited
+        visited.add(state)  
+
+        # Return if we have reached the goal
+        if problem.isGoalState(state):
+            return actions  
+
+        for successor, action, _ in problem.getSuccessors(state):
+            if successor not in visited:
+
+                # Push the successor and the updated path to the queue
+                queue.push((successor, actions + [action]))
+
+    # No solution found
+    return []
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
