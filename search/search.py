@@ -81,7 +81,8 @@ def depthFirstSearch(problem: SearchProblem):
     visited = set()
 
     # Store states to explore
-    stack = [(problem.getStartState(), [])]
+    stack = util.Stack()
+    stack.push((problem.getStartState(), []))
 
     while stack:
 
@@ -100,7 +101,7 @@ def depthFirstSearch(problem: SearchProblem):
             for successor, action, _ in problem.getSuccessors(state):
                 if successor not in visited:
                     new_actions = actions + [action]
-                    stack.append((successor, new_actions))
+                    stack.push((successor, new_actions))
 
     # No solution found
     return []
