@@ -175,7 +175,6 @@ def uniformCostSearch(problem: SearchProblem):
 
     return []
 
-
 def nullHeuristic(state, problem=None):
     """
     A heuristic function estimates the cost from the current state to the nearest
@@ -185,8 +184,36 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    # Keep track of visited nodes
+    visited = set()
+
+    # Store states to explore
+    queue = util.PriorityQueue()
+    queue.push((problem.getStartState(), [], 0), 0)
+
+    while not queue.isEmpty():
+
+        state, actions, cost = queue.pop()
+
+        # Skip if state has been visited
+        if state in visited: continue
+        visited.add(state)
+
+        # Return if we have reached the goal
+        if problem.isGoalState(state): return actions
+
+        # Add successors and actions to the queue
+        for successor, action, stepCost in problem.getSuccessors(state):
+
+            if successor not in visited:
+
+                # Push the successor and the updated path to the queue
+                new_actions = actions + [action]
+                new_cost = cost + stepCost
+                queue.push((successor, new_actions, new_cost), new_cost + heuristic(successor, problem))
+
+    return []
 
 
 # Abbreviations
