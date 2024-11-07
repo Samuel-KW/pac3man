@@ -180,7 +180,20 @@ class GradingAgent(Agent):
                 self.actionsConsistentWithOptimal[i] = False
             if studentAction[1] == int(optimalActions[i][1]):
                 curRightStatesExplored = True
+
         if not curRightStatesExplored and self.wrongStatesExplored < 0:
+            print("\n----- Bug: wrong number of states explored -----")
+            print("Wrong number of states explored: %d" % studentAction[1])
+            print("Optimal states explored: %d" % optimalActions[0][1])
+
+            print("Optimal actions:")
+            for i in range(len(optimalActions)):
+                print("\t%d: %s" % (i, optimalActions[i][0]))
+
+            print("\nStudent action: %s" % studentAction[1])
+            print("Student optimal action: %s" % optimalActions[i][1])
+
+            print("------------------------------------------------\n")
             self.wrongStatesExplored = 1
         for i in range(len(altDepthActions)):
             if studentAction[0] not in altDepthActions[i]:
