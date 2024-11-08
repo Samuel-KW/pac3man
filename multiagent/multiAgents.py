@@ -245,6 +245,12 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
       Your minimax agent with alpha-beta pruning.
     """
 
+    def maximize(self, state: GameState, agent: int, depth: int, alpha: float, beta: float):
+      pass
+
+    def minimize(self, state: GameState, agent: int, depth: int, alpha: float, beta: float):
+      pass
+
     def getAction(self, gameState: GameState):
         """
           Returns the minimax action using self.depth and self.evaluationFunction
