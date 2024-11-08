@@ -204,7 +204,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
           actions = gameState.getLegalActions(agent)
 
           # Recursive case: Handle the current agent
-          if agent == 0:  # Handle first agent (pacman)
+          if agent == 0: # Handle first agent (pacman)
 
             # Get the maximum utility
             maximum = minimax(
@@ -217,7 +217,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
 
             return maximum
 
-          else:  # Handle ghost agents
+          else: # Handle ghost agents
             next_agent = agent + 1
 
             # Check if we reached the end of the agents
@@ -312,7 +312,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         # Get the best action
         for action in gameState.getLegalActions(0):
             value = minimax(1, 0, gameState.generateSuccessor(0, action), alpha, beta)
-            
+
             if value > best_value:
                 best_value = value
                 best_action = action
@@ -334,8 +334,24 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
           All ghosts should be modeled as choosing uniformly at random from their
           legal moves.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        def maximize(state: GameState, agent: int, depth: int):
+          cost = float("-inf")
+          best_action = None
+
+          for action in state.getLegalActions(0):
+            successor = state.generateSuccessor(0, action)
+            prediction = predict(successor, depth, 1)
+            if prediction > cost:
+                cost = prediction
+                best_action = action
+
+        return
+
+        def predict(state: GameState, agent: int, depth: int):
+           pass
+
+        return maximize(gameState, 0, 0)
 
 
 def betterEvaluationFunction(currentGameState):
