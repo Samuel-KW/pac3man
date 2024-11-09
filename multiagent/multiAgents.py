@@ -382,15 +382,52 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         return decision
 
 
-def betterEvaluationFunction(currentGameState):
+def betterEvaluationFunction(currentGameState: GameState):
     """
       Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
       evaluation function (question 5).
 
-      DESCRIPTION: <write something here so we know what you did>
+      DESCRIPTION: Eat scared ghosts, avoid angry ghosts, eat nearby foods.
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    # Useful state variables
+    food = currentGameState.getFood().asList()
+    ghosts = currentGameState.getGhostStates()
+
+    pos = currentGameState.getPacmanPosition()
+    score = currentGameState.getScore()
+
+    # Higher score for avoiding ghosts or eating ghosts
+    for ghost in ghosts:
+        
+        # Get the distance to the ghost
+        distance = manhattanDistance(pos, ghost.getPosition())
+
+        if distance > 0:
+            
+            # Attempt to eat nearby scared ghosts
+            if ghost.scaredTimer > 0 and distance < 10:
+                score += 300 / distance
+
+            # Attempt to avoid nearby angry ghosts
+            elif distance < 3:  
+                score += -1 / distance
+        else:
+
+          # Don't die
+          return float("-inf")
+
+    distances = [manhattanDistance(pos, food) for food in food]
+
+    # Higher score for finding food areas
+    # for distance in distances:
+    #     score += 0.1 / distance
+        
+    # Higher score for getting closer to single foods
+    if len(distances) > 0:
+      score += 2 / min(distances)
+
+    return score
 
 
 # Abbreviation
