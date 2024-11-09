@@ -327,7 +327,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
       Your expectimax agent (question 4)
     """
 
-    def getAction(self, gameState):
+    def getAction(self, gameState: GameState):
         """
           Returns the expectimax action using self.depth and self.evaluationFunction
 
@@ -335,23 +335,51 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
           legal moves.
         """
 
-        def maximize(state: GameState, agent: int, depth: int):
-          cost = float("-inf")
-          best_action = None
+        # Maximize player action
+        def maximize(state: GameState, depth: int):
+          value = float("-inf")
 
           for action in state.getLegalActions(0):
             successor = state.generateSuccessor(0, action)
-            prediction = predict(successor, depth, 1)
-            if prediction > cost:
-                cost = prediction
-                best_action = action
-
-        return
-
+            prediction = predict(successor, 1, depth)
+            if prediction > value:
+                value = prediction
+ 
+          return value
+        
+        # Predict expected ghost actions
         def predict(state: GameState, agent: int, depth: int):
-           pass
+          value = 0
+          total = state.getNumAgents() - 1
 
-        return maximize(gameState, 0, 0)
+          # Get all legal actions
+          for action in state.getLegalActions(agent):
+            successor = state.generateSuccessor(agent, action)
+            value += select(successor, 0, depth + 1) if agent == total else select(successor, agent + 1, depth)
+
+          # Return the expected cost
+          return value / len(gameState.getLegalActions(agent))
+        
+        # Expectimax selection function
+        def select(state: GameState, agent: int, depth: int):
+          if depth == self.depth or state.isWin() or state.isLose():
+            return self.evaluationFunction(state)
+
+          # Handle the current agent
+          return maximize(state, depth) if agent == 0 else predict(state, agent, depth)
+
+        # Return the best action
+        value = float("-inf")
+        decision = Directions.STOP
+
+        for action in gameState.getLegalActions(0):
+          successor = gameState.generateSuccessor(0, action)
+          prediction = select(successor, 1, 0)
+          if prediction > value:
+            value = prediction
+            decision = action
+
+        return decision
 
 
 def betterEvaluationFunction(currentGameState):
